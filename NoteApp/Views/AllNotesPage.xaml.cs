@@ -1,5 +1,3 @@
-using NoteApp.Models;
-
 namespace NoteApp.Views;
 
 public partial class AllNotesPage : ContentPage
@@ -7,32 +5,11 @@ public partial class AllNotesPage : ContentPage
 	public AllNotesPage()
 	{
 		InitializeComponent();
-
-		BindingContext = new AllNotes();
 	}
 
-    protected override void OnAppearing()
+    private void ContentPage_NavigatedTo(object sender, NavigatedToEventArgs e)
     {
-		((AllNotes)BindingContext).LoadNotes();
-    }
-
-	private async void Add_Clicked(Object sender, EventArgs e)
-	{
-		await Shell.Current.GoToAsync(nameof(NotePage));
-	}
-
-	private async void NotesCollection_SelectionChanged(Object sender, SelectionChangedEventArgs e)
-	{
-		if (e.CurrentSelection.Count != 0)
-		{
-            // Get the note model
-			var note = (Note)e.CurrentSelection[0];
-
-			// Should navigate to "NotePage?ItemId=path\on\device\XYZ.notes.txt"
-			await Shell.Current.GoToAsync($"{nameof(NotePage)}?{nameof(NotePage.ItemId)}={note.Filename}");
-
-			// Unselect the UI
-			NotesCollection.SelectedItem = null;
-        }
+		// Clear the selected item, so we can select the item again later after going back from NotePage
+		NotesCollection.SelectedItem = null;
     }
 }
